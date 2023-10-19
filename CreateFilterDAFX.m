@@ -32,7 +32,6 @@ switch filter_type
         a = [ a0 a1 a2 ];
 
         y = filter(b,a,x);
-        freqz(b,a)
 
 
     case 2 % LPF FILTER
@@ -50,7 +49,6 @@ switch filter_type
         a = [ a0 a1 a2 ];
         
         y = filter(b,a,x);
-        freqz(b,a)
 
 
     case 3 % HPF FILTER
@@ -68,12 +66,11 @@ switch filter_type
         a = [ a0 a1 a2 ];
 
         y = filter(b,a,x);
-        freqz(b,a)
 
 
     case 4 % BPF FILTER
         f0 = 1000;
-        bw = 900;
+        bw = 1800;
         K = tan(pi*f0/fs);
         Q = f0/bw;
         
@@ -87,12 +84,11 @@ switch filter_type
         a = [ a0 a1 a2 ];
 
         y = filter(b,a,x);
-        freqz(b,a)
 
 
     case 5 % BSF FILTER
         f0 = 1000;
-        bw = 3000;
+        bw = 1800;
         K = tan(pi*f0/fs);
         Q = f0/bw;
         
@@ -106,7 +102,6 @@ switch filter_type
         a = [ a0 a1 a2 ];
 
         y = filter(b,a,x);
-        freqz(b,a)
 
 
 end           
