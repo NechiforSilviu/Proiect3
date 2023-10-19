@@ -22,26 +22,27 @@ switch filter_type
         K = tan(pi*f0/fs);
         Q = f0/bw;
         
-        b0 = K/(K^2*Q + K + Q);
-        b1 = 0;
-        b2 = -K/(K^2*Q + K + Q);
+        b0 = (K^2*Q-K+Q)/(K^2*Q+K+Q);
+        b1 = 2*Q*(K^2-1)/(K^2*Q+K+Q);
+        b2 = 1;
         a0 = 1;
         a1 = 2*Q*(K^2-1)/(K^2*Q+K+Q);
-        a2 = K^2*Q-K+Q/(K^2*Q+K+Q);
+        a2 = (K^2*Q-K+Q)/(K^2*Q+K+Q);
         b = [ b0 b1 b2 ];
         a = [ a0 a1 a2 ];
 
+        
         y = filter(b,a,x);
 
 
-    case 2 % LPF FILTER
+    case 2 % LPF 
         f0 = 2000;
         K = tan(pi*f0/fs);
         Q = 1/sqrt(2);
         
-        b0 = (K^2*Q)/(K^2*Q + K + Q);
-        b1 = 2*K^2*Q/(K^2*Q+ K + Q);
-        b2 = (K^2*Q)/(K^2*Q + K + Q);
+        b0 = K^2*Q/(K^2*Q+K+Q);
+        b1 = 2*K^2*Q/(K^2*Q+K+Q);
+        b2 = K^2*Q/(K^2*Q+K+Q);
         a0 = 1;
         a1 = 2*Q*(K^2-1)/(K^2*Q+K+Q);
         a2 = (K^2*Q-K+Q)/(K^2*Q+K+Q);
@@ -51,14 +52,14 @@ switch filter_type
         y = filter(b,a,x);
 
 
-    case 3 % HPF FILTER
-        f0 = 8000;
+    case 3 % HPF 
+        f0 = 2000;
         K = tan(pi*f0/fs);
         Q = 1/sqrt(2);
         
-        b0 = Q/(K^2*Q + K + Q);
-        b1 = -2*Q/(K^2*Q+ K + Q);
-        b2 = Q/(K^2*Q + K + Q);
+        b0 = Q/(K^2*Q+K+Q);
+        b1 = -2*Q/(K^2*Q+K+Q);
+        b2 = Q/(K^2*Q+K+Q);
         a0 = 1;
         a1 = 2*Q*(K^2-1)/(K^2*Q+K+Q);
         a2 = (K^2*Q-K+Q)/(K^2*Q+K+Q);
@@ -68,36 +69,36 @@ switch filter_type
         y = filter(b,a,x);
 
 
-    case 4 % BPF FILTER
+    case 4 % BPF (caz lpf)
         f0 = 1000;
-        bw = 1800;
+        bw = 1900;
         K = tan(pi*f0/fs);
         Q = f0/bw;
         
-        b0 = K/(K^2*Q + K + Q);
+        b0 = K/(K^2*Q+K+Q);
         b1 = 0;
-        b2 = -K/(K^2*Q + K + Q);
+        b2 = -K/(K^2*Q+K+Q);
         a0 = 1;
         a1 = 2*Q*(K^2-1)/(K^2*Q+K+Q);
-        a2 = (K^2*Q-K+Q)/(K^2*Q+K+Q); % SCRIA         a2 = K^2*Q-K+Q/(K^2*Q+K+Q);
+        a2 = (K^2*Q-K+Q)/(K^2*Q+K+Q);
         b = [ b0 b1 b2 ];
         a = [ a0 a1 a2 ];
 
         y = filter(b,a,x);
 
 
-    case 5 % BSF FILTER
+    case 5 % BSF (caz hpf)
         f0 = 1000;
-        bw = 1800;
+        bw = 1900; % this is directly proportinal to the level of earrape
         K = tan(pi*f0/fs);
         Q = f0/bw;
         
-        b0 = K^2*Q-K+Q/(K^2*Q + K + Q);
-        b1 = 2*Q*(K^2-1)/(K^2*Q+ K + Q);
-        b2 = 1;
+        b0 = Q*(1+K^2)/(K^2*Q+K+Q);
+        b1 = 2*Q*(K^2-1)/(K^2*Q+K+Q);
+        b2 = Q*(1+K^2)/(K^2*Q+K+Q);
         a0 = 1;
         a1 = 2*Q*(K^2-1)/(K^2*Q+K+Q);
-        a2 = (K^2*Q-K+Q)/(K^2*Q+K+Q);    %         a2 = K^2*Q-K+Q/(K^2*Q+K+Q);
+        a2 = (K^2*Q-K+Q)/(K^2*Q+K+Q);
         b = [ b0 b1 b2 ];
         a = [ a0 a1 a2 ];
 
@@ -108,5 +109,5 @@ end
 
 
 
-% Apply filter
+
 
