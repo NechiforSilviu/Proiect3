@@ -1,12 +1,14 @@
 clc; clear; close all;
 % TD - case 4
 [x, fs] = audioread('sunflower.mp3');
-x1 = x(44100* 6: 44100 * 8);
+x1 = x(44100* 6: 44100 * 9);
 x = x(1:1024);
 X = fft(x);
 N = length(X);
+% this filter impelentationhas a high attenuation in the 
+%pass band
 
-% filter_type = [1 1 1 1 1];
+% filter_type = [1 1 1 1` 1];
 for i = 1:5
 
     [y] = CreateFilterDAFX(x,fs,i);
@@ -21,7 +23,7 @@ for i = 1:5
     plotOnAudibleRange(y, fs);
 
     sound(y1,fs);
-    pause(3);
+    pause(4);
 
 end
 
