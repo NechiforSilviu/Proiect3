@@ -25,7 +25,9 @@ switch filter_type
         b = [ 1 - alfa  -2*cos(omega) 1 + alfa ];
         a = [ 1 + alfa  -2*cos(omega) 1 - alfa  ];
         y = filter(b,a,x);
-
+        sos = tf2sos(b,a);
+        figure(3);
+        plotOnAudibleRange(sos,fs);
 
     case 2 % LPF FILTER
         A = 10^(20/40);
@@ -36,9 +38,10 @@ switch filter_type
         
         b = [ (1 - cos(omega))/2  1 - cos(omega) (1 - cos(omega))/2 ];
         a = [ 1 + alfa -2 * cos(omega) 1 - alfa  ];
-
+        sos = tf2sos(b,a);
         y = filter(b,a,x);
-        freqz(b,a)
+        figure(3);
+        plotOnAudibleRange(sos,fs);
 
 
     case 3 % HPF FILTER
@@ -50,9 +53,10 @@ switch filter_type
         
         b = [ (1+cos(omega))/2 -(1+cos(omega)) (1+cos(omega))/2 ];
         a = [ 1 + alfa -2*cos(omega) 1 - alfa ];
-
+        sos = tf2sos(b,a);
         y = filter(b,a,x);
-        freqz(b,a)
+        figure(3);
+        plotOnAudibleRange(sos,fs);
 
 
     case 4 % BPF FILTER
@@ -72,7 +76,7 @@ switch filter_type
 
     case 5 % BSF FILTER
         f0 = 5000;
-        BW  = 8;
+        BW  = 2;
         actualBW =  f0 * ( 2^(BW/2) - 1/2^(BW/2) ); % from octaves to HZ
         BWInDB  = log2(actualBW/f0+ 2^(1/2)) / log2(2^(1/2) - 2^(-1/2));
         omega = 2*pi*f0/fs;        
@@ -82,7 +86,7 @@ switch filter_type
         y = filter(b,a,x);
         sos = tf2sos(b,a);
         figure(3);
-        semilogx((abs(fft(sos,19981))));
+        plotOnAudibleRange(sos,fs);
 
 
 end           
