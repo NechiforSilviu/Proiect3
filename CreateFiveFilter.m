@@ -1,5 +1,4 @@
 function [y_out] = CreateFiveFilter(x, fs, filter_type, frequency, bandwidth)
-proba 1 2 3 
 %[z,p,y] = create_filter(x, fs)
 %z,p - coefficents of the filter
 % if no fs is inputed, automatically apply an all pass filter
@@ -16,7 +15,7 @@ if ~exist("filter_type",'var')
 end
 b = zeros(5,3);
 a = zeros(5,3);
-y = zeros(5,length(x));
+
 
 
 for i = 1:5  %loop through filters
@@ -29,10 +28,9 @@ for i = 1:5  %loop through filters
             omega = 2*pi*frequency(i)/fs;
             Q = 1/(2*sinh(log(2)/2* bandwidth(i) * omega / sin(omega) ));
             alfa  = sin(omega)/(2*Q);
-            size(b(i,:)),size([ 1 - alfa  -2*cos(omega) 1 + alfa ])
             b(i,:) = [ 1 - alfa  -2*cos(omega) 1 + alfa ];
             a(i,:) = [ 1 + alfa  -2*cos(omega) 1 - alfa  ];
-            y(i,:) = filter (b(i,:),a(i,:),x);
+            %y(i,:) = filter (b(i,:),a(i,:),x);
     
         case 'LPF'
             S = 1;
@@ -42,7 +40,7 @@ for i = 1:5  %loop through filters
             
             b(i,:) = [ (1 - cos(omega))/2  1 - cos(omega) (1 - cos(omega))/2 ];
             a(i,:) = [ 1 + alfa -2 * cos(omega) 1 - alfa];
-            y(i,:) = filter (b(i,:),a(i,:),x);
+            %y(i,:) = filter (b(i,:),a(i,:),x);
 
         case 'HPF' 
         
@@ -53,7 +51,7 @@ for i = 1:5  %loop through filters
             
             b(i,:) = [ (1+cos(omega))/2 -(1+cos(omega)) (1+cos(omega))/2 ];
             a(i,:) = [ 1 + alfa -2*cos(omega) 1 - alfa ];
-            y(i,:) = filter (b(i,:),a(i,:),x);
+            %y(i,:) = filter (b(i,:),a(i,:),x);
     
         case 'BPF' 
             actualBW =  frequency(i) * ( 2^(bandwidth(i)/2) - 1/2^(bandwidth(i)/2) ); % from octaves to HZ
@@ -62,7 +60,7 @@ for i = 1:5  %loop through filters
             alfa = sin(omega) * sinh(log(2)/2 * bandwitdh(i) * omega/sin(omega));
             b(i,:) = [ alfa 0 -alfa ];
             a(i,:) = [ 1 + alfa -2*cos(omega) 1 - alfa];
-            y(i,:) = filter (b(i,:),a(i,:),x);
+            %y(i,:) = filter (b(i,:),a(i,:),x);
     
     
         case 'BSF' 
@@ -72,7 +70,7 @@ for i = 1:5  %loop through filters
             alfa = sin(omega) * sinh(log(2)/2 * bandwidth(i) * omega/sin(omega));
             b(i,:) = [ 1 -2*cos(omega) 1 ];
             a(i,:) = [ 1 + alfa -2*cos(omega) 1 - alfa]; 
-            y(i) = filter (b(i,:),a(i,:),x);
+            %y(i) = filter (b(i,:),a(i,:),x);
 
 
         case 'PEQ'
@@ -85,7 +83,7 @@ for i = 1:5  %loop through filters
             alfa = sin(omega) * sinh(log(2)/2 * bandwidth(i) * omega/sin(omega));
             b(i,:) = [ 1 + alfa * A -2 * cos(omega) 1+alfa/A];
             a(i,:) = [ 1 + alfa/A -2 * cos(omega) 1-alfa/A];
-            y(i,:) = filter (b(i,:),a(i,:),x);
+            %y(i,:) = filter (b(i,:),a(i,:),x);
     
         case 'LSF'
             S = 1000;
@@ -102,7 +100,7 @@ for i = 1:5  %loop through filters
     
             b(i,:) = [b0 b1 b2];
             a(i,:) = [a0 a1 a2];
-            y(i,:) = filter (b(i,:),a(i,:),x);
+            %y(i,:) = filter (b(i,:),a(i,:),x);
     
         case 'HSL'
             S = 10000;      
@@ -119,11 +117,25 @@ for i = 1:5  %loop through filters
     
             b(i,:) = [b0 b1 b2];
             a(i,:) = [a0 a1 a2];
-            y(i,:) = filter (b(i,:),a(i,:),x);
+            %y(i,:) = filter (b(i,:),a(i,:),x);
     
     end           
     
 end    % stop looping through filters
-y_out = sum(y);
+
+b_out = conv(b(1,:),b(2,:));
+b_out = conv(b_out,b(3,:));
+b_out = conv(b_out,b(4,:));
+b_out = conv(b_out,b(5,:));
+
+a_out = conv(a(1,:), a(2,:));
+a_out = conv(a_out, a(3,:));
+a_out = conv(a_out, a(4,:));
+a_out = conv(a_out, a(5,:));
+
+
+y_out = filter(b_out,a_out,x);
+
 % Apply filter
+
 
